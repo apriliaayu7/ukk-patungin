@@ -21,12 +21,12 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-white dark:bg-slate-900 rounded-r-xl shadow-xl flex flex-col py-10 gap-2 z-50">
       <div className="px-8 mb-10">
-        <h1 className="text-3xl font-black bg-gradient-to-br from-blue-600 to-cyan-400 bg-clip-text text-transparent font-headline">
+        <h1 className="text-4xl font-black italic text-primary font-headline cursor-pointer">
           Patungin
         </h1>
-        <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">
+        {/* <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">
           Split bills, stay friends
-        </p>
+        </p> */}
       </div>
 
       <nav className="flex-1 flex flex-col gap-2">

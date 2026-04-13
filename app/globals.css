@@ -5,35 +5,63 @@
 @theme {
   --font-headline: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
-  --font-label: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
+  /* PRIMARY */
   --color-primary: #0052d0;
+  --color-primary-hover: #0043aa;
   --color-primary-container: #799dff;
+  --color-on-primary: #f1f2ff;
+
+  /* SECONDARY */
   --color-secondary: #006859;
   --color-secondary-container: #26fedc;
-  --color-on-secondary-container: #005d4f;
+  --color-on-secondary-container: #003c34;
+
+  /* SURFACE SYSTEM */
   --color-background: #eaf9ff;
   --color-surface: #eaf9ff;
+  --color-surface-container: #c4efff;
+  --color-surface-container-low: #dbf5ff;
+  --color-surface-container-highest: #a1e7ff;
+  --color-surface-container-lowest: #ffffff;
+
+  /* TEXT */
   --color-on-surface: #003440;
   --color-outline: #4b7e8e;
   --color-outline-variant: #82b5c6;
-  --color-surface-container: #c4efff;
-  --color-surface-container-low: #dbf5ff;
-  --color-surface-container-lowest: #ffffff;
-  --color-surface-container-highest: #a1e7ff;
 }
 
 @layer base {
   body {
     @apply bg-background text-on-surface font-body;
   }
+
+  button {
+    @apply transition-all;
+  }
 }
 
+/* GLASS EFFECT (FIXED) */
 .glass-nav {
-  background: rgba(161, 231, 255, 0.7);
-  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(130, 181, 198, 0.3);
 }
-x
+
+/* SOFT NEON */
 .neon-glow {
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+  box-shadow: 0 0 30px rgba(0, 82, 208, 0.25);
+}
+
+/* GLOBAL UI CONSISTENCY */
+.card {
+  @apply bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm;
+}
+
+.btn-primary {
+  @apply bg-primary text-on-primary font-headline font-bold rounded-full px-6 py-3 flex items-center justify-center gap-2;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
 }

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 import { useParams, useRouter } from "next/navigation"
-import { Check, ArrowRight } from "lucide-react"
+import { Check, ArrowRight, Users, Info } from "lucide-react"
 
 type Participant = {
   id: string
@@ -29,13 +29,9 @@ export default function AssignPage() {
   const id = params?.id as string
 
   const [bill, setBill] = useState<Bill | null>(null)
-
-  // 🔥 itemId -> participantIds
   const [selected, setSelected] = useState<Record<string, string[]>>({})
-
   const [loading, setLoading] = useState(false)
 
-  // ✅ FETCH BILL (TETAP SAMA)
   useEffect(() => {
     if (!id) return
 
@@ -51,7 +47,6 @@ export default function AssignPage() {
     load()
   }, [id])
 
-  // ✅ TOGGLE (LOGIC LAMA)
   const toggleParticipant = (itemId: string, participantId: string) => {
     setSelected(prev => {
       const current = prev[itemId] ?? []
@@ -65,11 +60,9 @@ export default function AssignPage() {
     })
   }
 
-  // ✅ FORMAT RUPIAH
   const formatRupiah = (value: number) =>
     new Intl.NumberFormat("id-ID").format(value)
 
-  // ✅ SAVE (TETAP API LAMA)
   const handleSave = async () => {
     if (loading) return
     setLoading(true)
@@ -94,72 +87,142 @@ export default function AssignPage() {
     }
   }
 
-  if (!bill) return <p>Loading...</p>
+  if (!bill) {
+    return (
+      <div className="p-10 text-center text-gray-500">
+        Loading bill...
+      </div>
+    )
+  }
 
   const subtotal = bill.items.reduce((sum, i) => sum + i.price, 0)
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6">{bill.name}</h2>
+    <div className="min-h-screen bg-gray-50 p-8">
+      
+      {/* HEADER */}
+      <div className="mb-10">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <span>Bill</span>
+          <span>/</span>
+          <span className="text-black font-semibold">Assign Items</span>
+        </div>
 
-      {/* 🔥 ITEMS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {bill.items.map(item => {
-          const selectedIds = selected[item.id] ?? []
+        <h1 className="text-4xl font-black mt-2">
+          Assign Items
+        </h1>
 
-          return (
-            <div key={item.id} className="border p-4 rounded-xl shadow-sm">
-              <h3 className="font-bold text-lg">{item.name}</h3>
-              <p className="text-gray-500">
-                Rp {formatRupiah(item.price)}
-              </p>
-
-              {/* 🔥 PARTICIPANTS (UI BARU) */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                {bill.participants.map(p => {
-                  const active = selectedIds.includes(p.id)
-
-                  return (
-                    <button
-                      key={p.id}
-                      onClick={() => toggleParticipant(item.id, p.id)}
-                      className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
-                        active
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200"
-                      }`}
-                    >
-                      {p.name}
-                      {active && <Check size={12} />}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          )
-        })}
+        <p className="text-gray-500 mt-2 flex items-center gap-2">
+          <Info size={16} />
+          Pilih siapa yang makan apa
+        </p>
       </div>
 
-      {/* 🔥 SUMMARY */}
-      <div className="mt-10 border-t pt-6">
-        <p className="text-gray-600">
-          Subtotal: Rp {formatRupiah(subtotal)}
-        </p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-        {/* ❌ TAX DIHAPUS karena DB kamu ga ada */}
-        
-        <h3 className="font-bold text-xl mt-2">
-          Total: Rp {formatRupiah(subtotal)}
-        </h3>
+        {/* LEFT - ITEMS */}
+        <div className="lg:col-span-8 space-y-6">
 
-        <button
-          onClick={handleSave}
-          disabled={loading}
-          className="mt-6 bg-blue-500 text-white px-6 py-3 rounded-full flex items-center gap-2"
-        >
-          {loading ? "Saving..." : "Next"}
-          <ArrowRight />
-        </button>
+          {bill.items.map(item => {
+            const selectedIds = selected[item.id] ?? []
+
+            return (
+              <div
+                key={item.id}
+                className="bg-white rounded-2xl p-6 shadow-sm border"
+              >
+
+                {/* ITEM HEADER */}
+                <div className="flex justify-between mb-4">
+                  <div>
+                    <h3 className="font-bold text-lg">
+                      {item.name}
+                    </h3>
+                    <p className="text-gray-500">
+                      Rp {formatRupiah(item.price)}
+                    </p>
+                  </div>
+
+                  <div className="text-xs px-3 py-1 rounded-full bg-gray-100">
+                    {selectedIds.length === 0
+                      ? "Unassigned"
+                      : `${selectedIds.length} person`}
+                  </div>
+                </div>
+
+                {/* PARTICIPANTS */}
+                <div className="flex flex-wrap gap-3">
+                  {bill.participants.map(p => {
+                    const active = selectedIds.includes(p.id)
+
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() =>
+                          toggleParticipant(item.id, p.id)
+                        }
+                        className={`
+                          flex items-center gap-2 px-4 py-2 rounded-full text-sm
+                          transition-all border
+                          ${
+                            active
+                              ? "bg-black text-white"
+                              : "bg-white hover:bg-gray-100"
+                          }
+                        `}
+                      >
+                        <div className="w-5 h-5 rounded-full bg-gray-300 flex items-center justify-center text-[10px]">
+                          {p.name[0]}
+                        </div>
+                        {p.name}
+                        {active && <Check size={14} />}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* RIGHT - SUMMARY */}
+        <div className="lg:col-span-4 space-y-6">
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm border">
+            <h3 className="font-bold text-xl mb-6">
+              Summary
+            </h3>
+
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Subtotal</span>
+                <span>Rp {formatRupiah(subtotal)}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-gray-500">Total</span>
+                <span className="font-bold">
+                  Rp {formatRupiah(subtotal)}
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              className="mt-6 w-full bg-black text-white py-3 rounded-xl flex items-center justify-center gap-2"
+            >
+              {loading ? "Saving..." : "Next"}
+              <ArrowRight size={16} />
+            </button>
+          </div>
+
+          {/* HINT CARD */}
+          <div className="bg-blue-50 p-5 rounded-2xl text-sm text-blue-600">
+            💡 Tip: Pastikan semua item sudah di-assign sebelum lanjut
+          </div>
+
+        </div>
       </div>
     </div>
   )

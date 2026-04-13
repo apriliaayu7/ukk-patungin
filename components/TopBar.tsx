@@ -22,10 +22,10 @@ export function TopBar() {
           <span className="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
         </button>
         
-        <button className="text-blue-600 p-2 rounded-full hover:bg-blue-50 transition-colors flex items-center gap-2">
+        {/* <button className="text-blue-600 p-2 rounded-full hover:bg-blue-50 transition-colors flex items-center gap-2">
           <Wallet className="w-6 h-6" />
           <span className="font-bold">Rp 2.450.000</span>
-        </button>
+        </button> */}
 
         <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container shadow-sm">
           <img
