@@ -1,23 +1,29 @@
-import { prisma } from "@/lib/prisma"
+"use client"
+
+import { useEffect, useState } from "react"
 import { Sidebar } from "@/components/SideBar"
 import { TopBar } from "@/components/TopBar"
 import Dashboard from "@/components/Dashboard"
-import { cookies } from "next/headers"
 
-export default async function DashboardPage() {
-  const cookieStore = await cookies()
-  const email = cookieStore.get("userEmail")?.value
+type User = {
+  id: string
+  email: string
+  name?: string | null
+}
 
-  if (!email) {
-    return <div>Silakan login dulu</div>
-  }
+export default function DashboardPage() {
+  const [user, setUser] = useState<User | null>(null)
 
-  const user = await prisma.user.findUnique({
-    where: { email },
-  })
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user")
+
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
+    }
+  }, [])
 
   if (!user) {
-    return <div>User tidak ditemukan</div>
+    return <div>Silakan login dulu</div>
   }
 
   return (
@@ -32,7 +38,7 @@ export default async function DashboardPage() {
         <Dashboard
           user={{
             ...user,
-            name: user.email,
+            name: user.name || user.email,
             balance: 0,
           }}
           activeBill={null}

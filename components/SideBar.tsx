@@ -17,16 +17,14 @@ export function Sidebar() {
   ]
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm("Yakin mau logout?")
-    if (!confirmLogout) return
+  const confirmLogout = window.confirm("Yakin mau logout?")
+  if (!confirmLogout) return
 
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
+  localStorage.removeItem("token")
+  localStorage.removeItem("user")
 
-    document.cookie = "token=; Max-Age=0; path=/"
-
-    router.push("/login")
-  }
+  router.push("/login")
+}
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-white dark:bg-slate-900 rounded-r-xl shadow-xl flex flex-col py-10 z-50">
